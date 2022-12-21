@@ -11,8 +11,6 @@ def insertion(output, n, input):
         n (Int): Max length of `output`
         input (Dict): Potential dict to be inserted in `output`
     """
-    print(f"Input = {input}")
-    print(f"Output = {output}")
     if output[n-1]["score"] >= input["score"]:
         # If our last (lowest) output score is greater than or equal to the input's score, don't insert and return
         pass
@@ -20,14 +18,13 @@ def insertion(output, n, input):
         # Start searching for insertion spot from the first (highest) value
         for i in range(0,n):
             if output[i]["score"] < input["score"]:
-                print(f"Inputting {input['score']} over {output[i]['score']}")
                 # Pop last (lowest) value, then insert our new value in-place so rest "slide down" and we keep max size `n`
-                popped = output.pop()
-                print(f"Popped {popped}")
+                output.pop()
                 output.insert(i, input)
                 break
             else:
-                print("Not inserting...")
+                # Maybe next time...
+                continue
     return output
 
 # Parse CLI args, catch any exceptions
@@ -44,43 +41,42 @@ except Exception as e:
 file = open(file_name, 'r')
 if not file:
     print(f"ERROR: Failed to read {file_name}")
+    file.close()
     exit(1)
 
 # Setup `output` with `n` default values to get overwritten
-# TODO what if n > m (lines in text)
 output = []
 for i in range(0,n):
     output.append({"score": -1, "id": -1})
     
 # Read through file, line by line
-count = 0
 while True:
     line = file.readline()
-    print("\n" + "-" * 150)
-    print(f"Reading line \'{line}\'")
-    if line == '':
+    if line == '\n':
         # Skip empty lines
         continue
-    elif line != '\n':
-        # parse non-empty String `line` into Dict `input` according to spec
-        try:
-            m = re.search("^[\d]+", line)
-            score = m.group(0)
-            m = re.search("\{.*\}", line)
-            d = json.loads(m.group(0))
-            id = d["id"]
-            input = {"score": int(score), "id": id}
-        except Exception as e:
-            print(f"ERROR: Improper line format: {e}")
-            exit(2)
-        # Try inserting `input` into `output`
-        output = insertion(output, n, input)
-    else:
-        # Break parsing loop when done with file
+    elif line == '':
+        # EOF
         break
+    # parse non-empty String `line` into Dict `input` according to spec
+    try:
+        m = re.search("^[\d]+", line)
+        score = m.group(0)
+        m = re.search("\{.*\}", line)
+        d = json.loads(m.group(0))
+        id = d["id"]
+        input = {"score": int(score), "id": id}
+    except Exception as e:
+        print(f"ERROR: Improper line format: {e}")
+        file.close()
+        exit(2)
+    # Try inserting parsed `input` into `output`
+    output = insertion(output, n, input)
+
     
-# Cleanup, print output, and exit successfully
-# TODO format output
+# Cleanup, print output, and exit Success
 file.close()
+for line in output:
+    print(line)
 exit(0)
 
