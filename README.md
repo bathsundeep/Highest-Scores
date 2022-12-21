@@ -89,8 +89,8 @@ The output should be written directly to stdout and not written to an output fil
 There are 3 exit codes: 
  0 - Success where the final output is printed to stdout.
  1 - Failure where the input file is not found or CLI args are invalid.
- 2 - Failure where some input data is not valid. 
- Empty lines in the input file should be ignored rather than treated as invalid input.
+ 2 - Failure where some input data in the file is not valid. 
+ Empty lines in the input file should be ignored rather than treated as invalid input. Duplicate id's are invalid input.
 
 ### Hint
 Use a data structure that maintains a sorted data set and memory efficient.

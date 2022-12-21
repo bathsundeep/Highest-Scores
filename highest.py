@@ -11,20 +11,24 @@ def insertion(output, n, input):
         n (Int): Max length of `output`
         input (Dict): Potential dict to be inserted in `output`
     """
-    if output[n-1]["score"] >= input["score"]:
-        # If our last (lowest) output score is greater than or equal to the input's score, don't insert and return
+    if output[n-1]["score"] > input["score"]:
+        # If our last (lowest) output score is greater than or equal to the input's score, just return
         pass
     else:
         # Start searching for insertion spot from the first (highest) value
         for i in range(0,n):
-            if output[i]["score"] < input["score"]:
-                # Pop last (lowest) value, then insert our new value in-place so rest "slide down" and we keep max size `n`
+            if output[i]["id"] == input["id"]:
+                # Don't allow duplicate id's, invalid input
+                raise Exception(f"Duplicate id {input['id']}")
+            elif output[i]["score"] >= input["score"]:
+                # Move down the list
+                continue
+            else:
+                # If input score is strictly greater than output...
+                # Pop last (lowest) value and insert new value in-place to keep max size `n`
                 output.pop()
                 output.insert(i, input)
                 break
-            else:
-                # Maybe next time...
-                continue
     return output
 
 # Parse CLI args, catch any exceptions
@@ -66,12 +70,12 @@ while True:
         d = json.loads(m.group(0))
         id = d["id"]
         input = {"score": int(score), "id": id}
+        # Try inserting parsed `input` into `output`
+        output = insertion(output, n, input)
     except Exception as e:
         print(f"ERROR: Improper line format: {e}")
         file.close()
         exit(2)
-    # Try inserting parsed `input` into `output`
-    output = insertion(output, n, input)
 
     
 # Cleanup, print output, and exit Success
