@@ -19,7 +19,7 @@ function generate(count, filename) {
 }
 
 
-
+generate(3, "3.data");
 generate(100,"example_input_data_1.data");
 generate(10000,"example_input_data_2.data");
 //Chunk last file, as node hangs on large values 

@@ -86,9 +86,11 @@ $ python highest.py score_recs.data 5
 The output should be written directly to stdout and not written to an output file.
 
 ### Exit Conditions
-Upon successful running, your solution should exit with exit code 0.  If the input data file is not valid, your solution
-should exit with code 2, while if the input file is not found, your solution should exit with code 1.  Empty lines
-in the input file should be ignored rather than treated as invalid input.
+There are 3 exit codes: 
+ 0 - Success where the final output is printed to stdout.
+ 1 - Failure where the input file is not found or CLI args are invalid.
+ 2 - Failure where some input data is not valid. 
+ Empty lines in the input file should be ignored rather than treated as invalid input.
 
 ### Hint
 Use a data structure that maintains a sorted data set and memory efficient.
